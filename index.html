@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ExpiryIQ Prototype</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#68748a;--line:#e3e8f0;--nav:#0e2239;--nav2:#173c5d;--blue:#2f6fed;--green:#11845b;--amber:#c47b0a;--red:#c0392b;--soft:#eef4ff;--radius:16px;--shadow:0 10px 30px rgba(31,49,78,.07)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{background:linear-gradient(180deg,var(--nav),#102b46);color:#fff;padding:26px 18px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:10px;align-items:center;margin:0 9px 26px}.mark{width:35px;height:35px;border-radius:10px;background:#fff;color:var(--nav);display:grid;place-items:center;font-weight:900}.brand strong{font-size:19px}.brand small{display:block;color:#adbed0;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.nav a{display:flex;align-items:center;gap:11px;padding:11px 12px;margin:4px 0;color:#d4e0ec;text-decoration:none;border-radius:10px;font-size:13px}.nav a:hover,.nav a.active{background:rgba(255,255,255,.1);color:#fff}.ico{width:20px;text-align:center}
+.sideNote{position:absolute;bottom:18px;left:18px;right:18px;background:rgba(255,255,255,.08);padding:12px;border-radius:12px;color:#cbd8e4;font-size:11px;line-height:1.4}.sideNote b{color:#fff}
+.main{padding:0 30px 40px}.top{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);margin-bottom:24px}.top h1{font-size:23px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.badge{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;background:#fff;border:1px solid var(--line);border-radius:99px;font-size:11px;color:var(--muted)}.dot{width:8px;height:8px;background:var(--green);border-radius:50%}
+.view{display:none}.view.active{display:block}.notice{background:#fff7df;border:1px solid #f2d68d;color:#76520c;padding:11px 14px;border-radius:10px;font-size:12px;margin-bottom:18px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.metric .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.metric .num{font-size:29px;font-weight:800;margin:7px 0 3px}.metric .delta{font-size:11px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.sectionTitle h2{font-size:15px;margin:0}.linkbtn{border:0;background:var(--soft);color:var(--blue);border-radius:8px;padding:7px 10px;font-weight:700;font-size:11px;cursor:pointer}
+table{width:100%;border-collapse:collapse}th{font-size:10px;text-align:left;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:9px 8px;border-bottom:1px solid var(--line)}td{font-size:12px;padding:11px 8px;border-bottom:1px solid #edf0f5;vertical-align:middle}.prod{font-weight:700}.tiny{font-size:10px;color:var(--muted)}.pill{display:inline-flex;border-radius:99px;padding:4px 8px;font-size:10px;font-weight:700}.red{background:#fdecea;color:var(--red)}.amber{background:#fff3dc;color:var(--amber)}.green{background:#e8f7f0;color:var(--green)}.blue{background:#eaf1ff;color:var(--blue)}
+.barrow{display:grid;grid-template-columns:110px 1fr 42px;gap:10px;align-items:center;margin:12px 0}.barlabel{font-size:11px}.track{height:9px;background:#edf1f6;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--blue);border-radius:99px}.barval{text-align:right;font-size:11px;font-weight:700}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:15px}.search{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}.btn{border:0;background:var(--blue);color:white;border-radius:10px;padding:10px 13px;font-weight:700;font-size:12px;cursor:pointer}.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.field label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.05em;margin:0 0 5px}.field input,.field select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}.formrow{margin-top:16px;display:flex;justify-content:flex-end;gap:10px}
+.action{font-weight:700;color:var(--blue)}.hard{font-weight:800;color:var(--red)}.legend{display:flex;gap:12px;font-size:10px;color:var(--muted);margin:10px 0 0}.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.reportGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.bigstat{display:flex;align-items:end;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}.bigstat:last-child{border:0}.bigstat b{font-size:23px}.bigstat span{font-size:11px;color:var(--muted)}
+.rule{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.rule:last-child{border:0}.rule .n{height:28px;width:28px;border-radius:8px;background:var(--soft);display:grid;place-items:center;color:var(--blue);font-weight:800;font-size:11px}.rule b{font-size:12px}.rule p{font-size:11px;color:var(--muted);margin:3px 0 0;line-height:1.45}
+@media(max-width:1000px){.app{grid-template-columns:190px 1fr}.grid4{grid-template-columns:repeat(2,1fr)}.grid2,.reportGrid{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><div class="mark">E</div><div><strong>ExpiryIQ</strong><small>Retail decision support</small></div></div>
+  <nav class="nav">
+    <a href="#dashboard" data-view="dashboard"><span class="ico">▦</span>Dashboard</a>
+    <a href="#expiry" data-view="expiry"><span class="ico">◷</span>Expiry queue</a>
+    <a href="#batch" data-view="batch"><span class="ico">＋</span>Batch capture</a>
+    <a href="#waste" data-view="waste"><span class="ico">⌫</span>Waste log</a>
+    <a href="#reorder" data-view="reorder"><span class="ico">↻</span>Reorder support</a>
+    <a href="#reports" data-view="reports"><span class="ico">▥</span>Reports</a>
+    <a href="#evidence" data-view="evidence"><span class="ico">✓</span>Evidence & rules</a>
+  </nav>
+  <div class="sideNote"><b>Academic prototype</b><br>Synthetic demonstration data only. No live retailer outcomes or food-safety certification are claimed.</div>
+</aside>
+<main class="main">
+  <header class="top"><div><h1 id="title">Dashboard</h1><div class="sub">Single-site independent convenience store · synthetic pilot dataset</div></div><div class="badge"><span class="dot"></span> Prototype dataset loaded</div></header>
+  <div class="notice">Decision support only: use-by dates are treated as safety dates; best-before dates are quality dates. Staff remain responsible for food-safety procedures and final commercial decisions.</div>
+
+  <section id="dashboard" class="view">
+    <div class="grid4">
+      <div class="card metric"><div class="label">Stock value at risk</div><div class="num" id="riskValue">£0</div><div class="delta">near-expiry stock not expected to sell in time</div></div>
+      <div class="card metric"><div class="label">Batches needing action</div><div class="num" id="actionCount">0</div><div class="delta">hard stops + urgent + watchlist</div></div>
+      <div class="card metric"><div class="label">Waste this month</div><div class="num" id="wasteValue">£0</div><div class="delta">synthetic recorded cost value</div></div>
+      <div class="card metric"><div class="label">Data completeness</div><div class="num">92%</div><div class="delta">expiry/cost fields available in sample</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="sectionTitle"><h2>Priority action queue</h2><button class="linkbtn" onclick="showView('expiry')">Open full queue</button></div><table><thead><tr><th>Product / batch</th><th>Days</th><th>Qty</th><th>At risk</th><th>Action</th></tr></thead><tbody id="priorityBody"></tbody></table></div>
+      <div class="card"><div class="sectionTitle"><h2>At-risk value by category</h2><span class="tiny">synthetic £ cost</span></div><div id="categoryBars"></div><div class="legend"><span><i style="background:#2f6fed"></i>Estimated at-risk stock value</span></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="sectionTitle"><h2>Decision summary</h2></div><div class="bigstat"><span>Use-by hard stops</span><b id="hardStops">0</b></div><div class="bigstat"><span>Markdown prompts</span><b id="markdowns">0</b></div><div class="bigstat"><span>Reorder reviews</span><b id="reorders">0</b></div></div>
+      <div class="card"><div class="sectionTitle"><h2>Daily briefing</h2></div><div class="rule"><div class="n">1</div><div><b>Deal with food-safety exceptions first</b><p>Quarantine any batch beyond a use-by date and log the waste/exception outcome.</p></div></div><div class="rule"><div class="n">2</div><div><b>Work the highest value-at-risk batches</b><p>Prioritise short-dated stock where recent sales are unlikely to clear current quantity.</p></div></div><div class="rule"><div class="n">3</div><div><b>Review the next order</b><p>Do not count all current stock as equally usable when a material share will expire before expected demand.</p></div></div></div>
+    </div>
+  </section>
+
+  <section id="expiry" class="view">
+    <div class="toolbar"><input id="q" class="search" placeholder="Search product, category or batch..." oninput="renderExpiry()"><button class="btn secondary" onclick="downloadCSV()">Export queue CSV</button></div>
+    <div class="card"><div class="sectionTitle"><h2>Expiry action queue</h2><div class="legend"><span><i style="background:#c0392b"></i>Hard stop</span><span><i style="background:#c47b0a"></i>Urgent</span><span><i style="background:#2f6fed"></i>Watch</span></div></div><table><thead><tr><th>Product</th><th>Batch</th><th>Date type</th><th>Expiry</th><th>Days</th><th>Stock</th><th>Avg/day</th><th>At-risk qty</th><th>At-risk value</th><th>Recommendation</th></tr></thead><tbody id="expiryBody"></tbody></table></div>
+  </section>
+
+  <section id="batch" class="view">
+    <div class="card"><div class="sectionTitle"><h2>Capture a delivery batch</h2><span class="tiny">manual MVP route where expiry data is not available from EPOS/barcodes</span></div>
+      <div class="formgrid">
+        <div class="field"><label>Product</label><select id="fProduct"></select></div>
+        <div class="field"><label>Batch ID</label><input id="fBatch" value="B-NEW-001"></div>
+        <div class="field"><label>Quantity received</label><input id="fQty" type="number" value="12"></div>
+        <div class="field"><label>Date type</label><select id="fType"><option>Use-by</option><option>Best-before</option></select></div>
+        <div class="field"><label>Expiry date</label><input id="fExpiry" type="date"></div>
+        <div class="field"><label>Unit cost (£)</label><input id="fCost" type="number" step="0.01" value="1.10"></div>
+        <div class="field"><label>Supplier</label><input id="fSupplier" value="Example Wholesaler"></div>
+        <div class="field"><label>Delivery date</label><input id="fDelivery" type="date"></div>
+        <div class="field"><label>Storage</label><select><option>Chilled</option><option>Ambient</option><option>Frozen</option></select></div>
+      </div><div class="formrow"><button class="btn secondary" onclick="resetForm()">Reset</button><button class="btn" onclick="addBatch()">Save synthetic batch</button></div>
+    </div>
+    <div class="card" style="margin-top:16px"><div class="sectionTitle"><h2>Minimum data checks</h2></div><div class="rule"><div class="n">A</div><div><b>Product identity</b><p>SKU/barcode and product name must map to the EPOS master record.</p></div></div><div class="rule"><div class="n">B</div><div><b>Batch date and date type</b><p>A date without use-by/best-before classification is not enough for safe decision logic.</p></div></div><div class="rule"><div class="n">C</div><div><b>Cost and quantity</b><p>Required to estimate stock value at risk. Missing data generates a warning rather than an invented value.</p></div></div></div>
+  </section>
+
+  <section id="waste" class="view">
+    <div class="card"><div class="sectionTitle"><h2>Waste log</h2><button class="btn secondary" onclick="addWasteDemo()">Add example event</button></div><table><thead><tr><th>Date</th><th>Product</th><th>Batch</th><th>Reason</th><th>Qty</th><th>Cost value</th><th>Note</th></tr></thead><tbody id="wasteBody"></tbody></table></div>
+  </section>
+
+  <section id="reorder" class="view">
+    <div class="card"><div class="sectionTitle"><h2>Expiry-aware reorder support</h2><span class="tiny">transparent suggestion; not an automatic purchase order</span></div><table><thead><tr><th>Product</th><th>Current stock</th><th>Near-expiry stock</th><th>Usable stock proxy</th><th>Avg/day</th><th>Lead time</th><th>Safety stock</th><th>Suggested order</th><th>Reason</th></tr></thead><tbody id="reorderBody"></tbody></table></div>
+  </section>
+
+  <section id="reports" class="view">
+    <div class="reportGrid">
+      <div class="card"><div class="sectionTitle"><h2>Waste cost by reason</h2></div><div id="wasteBars"></div></div>
+      <div class="card"><div class="sectionTitle"><h2>Prototype KPI scorecard</h2></div><div class="bigstat"><span>Batch records with date type</span><b>100%</b></div><div class="bigstat"><span>Hard-stop scenarios detected</span><b>100%</b></div><div class="bigstat"><span>Rules with human-readable rationale</span><b>100%</b></div><div class="bigstat"><span>Real-store impact evidence</span><b>0%</b></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><div class="sectionTitle"><h2>Interpretation boundary</h2></div><p style="font-size:12px;line-height:1.65;color:var(--muted);margin:0">These outputs demonstrate functional logic using synthetic data. They do not establish actual food-waste reduction, staff time savings, willingness to pay, commercial retention or legal compliance in a live store. Those outcomes require an approved retailer pilot.</p></div>
+  </section>
+
+  <section id="evidence" class="view">
+    <div class="grid2">
+      <div class="card"><div class="sectionTitle"><h2>Rules implemented in this prototype</h2></div><div class="rule"><div class="n">1</div><div><b>Use-by hard stop</b><p>If a use-by batch is past date, recommendation becomes quarantine/remove from sale; no markdown advice is shown.</p></div></div><div class="rule"><div class="n">2</div><div><b>At-risk quantity</b><p>max(0, batch stock - average daily sales × days remaining). This is a simple transparent planning proxy.</p></div></div><div class="rule"><div class="n">3</div><div><b>Markdown prompt</b><p>Shown where stock is near expiry and at-risk quantity is positive. The retailer retains final pricing authority.</p></div></div><div class="rule"><div class="n">4</div><div><b>Expiry-aware reorder</b><p>Near-expiry stock is discounted from the usable-stock proxy before the next-order suggestion is calculated.</p></div></div></div>
+      <div class="card"><div class="sectionTitle"><h2>Evidence-to-feature trace</h2></div><table><thead><tr><th>Evidence theme</th><th>Feature</th></tr></thead><tbody><tr><td>Mixed expiry dates within one SKU</td><td>Batch-level records + FEFO view</td></tr><tr><td>Forecasting / availability-waste trade-off</td><td>Transparent sales-rate and reorder support</td></tr><tr><td>Markdown effectiveness varies</td><td>Prompt, not automatic optimal price</td></tr><tr><td>Use-by vs best-before distinction</td><td>Date-type-specific rules</td></tr><tr><td>Small-firm adoption constraints</td><td>Simple CSV/manual data paths</td></tr></tbody></table></div>
+    </div>
+  </section>
+</main>
+</div>
+<script>
+const today = new Date('2026-09-03T12:00:00');
+const products=[
+{id:'MILK2',name:'Fresh Whole Milk 2L',cat:'Fresh milk',avg:7.2,stock:24,lead:2,safety:8},
+{id:'SAND1',name:'Chicken & Bacon Sandwich',cat:'Sandwiches',avg:5.1,stock:15,lead:1,safety:5},
+{id:'SALAD',name:'Caesar Salad Bowl',cat:'Chilled food',avg:3.2,stock:13,lead:1,safety:4},
+{id:'YOG6',name:'Greek Yogurt 6-pack',cat:'Chilled food',avg:2.4,stock:14,lead:2,safety:4},
+{id:'BREAD',name:'White Medium Sliced Loaf',cat:'Bread & bakery',avg:8.0,stock:20,lead:1,safety:8},
+{id:'JUICE',name:'Fresh Orange Juice 1L',cat:'Chilled food',avg:2.0,stock:11,lead:2,safety:4},
+{id:'CHKN',name:'Cooked Chicken Slices 200g',cat:'Chilled food',avg:2.7,stock:9,lead:2,safety:3},
+{id:'CRISP',name:'Sea Salt Crisps 150g',cat:'Savoury snacks',avg:4.3,stock:31,lead:3,safety:10}
+];
+let batches=[
+{product:'MILK2',batch:'M-0902-A',type:'Use-by',expiry:'2026-09-04',qty:10,cost:1.18,supplier:'Example Dairy'},
+{product:'MILK2',batch:'M-0902-B',type:'Use-by',expiry:'2026-09-08',qty:14,cost:1.18,supplier:'Example Dairy'},
+{product:'SAND1',batch:'S-0903',type:'Use-by',expiry:'2026-09-03',qty:8,cost:1.42,supplier:'Example Food Co'},
+{product:'SALAD',batch:'C-0901',type:'Use-by',expiry:'2026-09-02',qty:4,cost:1.75,supplier:'Example Fresh'},
+{product:'SALAD',batch:'C-0903',type:'Use-by',expiry:'2026-09-05',qty:9,cost:1.75,supplier:'Example Fresh'},
+{product:'YOG6',batch:'Y-0829',type:'Best-before',expiry:'2026-09-06',qty:10,cost:1.65,supplier:'Example Dairy'},
+{product:'BREAD',batch:'B-0903',type:'Best-before',expiry:'2026-09-04',qty:12,cost:.83,supplier:'Example Bakery'},
+{product:'JUICE',batch:'J-0902',type:'Use-by',expiry:'2026-09-05',qty:11,cost:1.55,supplier:'Example Drinks'},
+{product:'CHKN',batch:'K-0902',type:'Use-by',expiry:'2026-09-04',qty:9,cost:1.88,supplier:'Example Food Co'},
+{product:'CRISP',batch:'P-0820',type:'Best-before',expiry:'2026-10-30',qty:31,cost:.72,supplier:'Example Wholesale'}
+];
+let waste=[
+{date:'2026-09-01',product:'Caesar Salad Bowl',batch:'C-0830',reason:'Expired',qty:3,value:5.25,note:'Use-by'},
+{date:'2026-08-29',product:'Fresh Whole Milk 2L',batch:'M-0827',reason:'Expired',qty:4,value:4.72,note:'Use-by'},
+{date:'2026-08-27',product:'Greek Yogurt 6-pack',batch:'Y-0820',reason:'Quality deterioration',qty:2,value:3.30,note:'Best-before'},
+{date:'2026-08-25',product:'Chicken & Bacon Sandwich',batch:'S-0824',reason:'Damaged',qty:2,value:2.84,note:'Packaging'}
+];
+const pmap=Object.fromEntries(products.map(p=>[p.id,p]));
+function days(exp){const e=new Date(exp+'T00:00:00');const t=new Date(today.getFullYear(),today.getMonth(),today.getDate());return Math.round((e-t)/86400000)}
+function calc(b){const p=pmap[b.product]; const d=days(b.expiry); const horizon=Math.max(d,0); const expected=p.avg*horizon; const risk=Math.max(0,b.qty-expected); return {...b,p,d,risk,value:risk*b.cost};}
+function rec(x){if(x.type==='Use-by'&&x.d<0)return ['Hard stop','red','Remove from sale / quarantine'];if(x.d<=0)return ['Urgent','amber',x.type==='Use-by'?'Remove by end of day':'Quality review'];if(x.d<=2&&x.risk>0)return ['Urgent','amber','Consider markdown / FEFO'];if(x.d<=4&&x.risk>0)return ['Watch','blue','Rotate & monitor'];return ['OK','green','No immediate action']}
+function money(v){return '£'+Number(v).toFixed(2)}
+function renderAll(){renderDashboard();renderExpiry();renderWaste();renderReorder();renderReports();populateForm()}
+function renderDashboard(){const xs=batches.map(calc);const risky=xs.filter(x=>x.d<=4||x.risk>0);document.getElementById('riskValue').textContent=money(xs.reduce((s,x)=>s+x.value,0));document.getElementById('actionCount').textContent=risky.length;document.getElementById('wasteValue').textContent=money(waste.reduce((s,w)=>s+w.value,0));document.getElementById('hardStops').textContent=xs.filter(x=>x.type==='Use-by'&&x.d<0).length;document.getElementById('markdowns').textContent=xs.filter(x=>x.d>=0&&x.d<=2&&x.risk>0).length;document.getElementById('reorders').textContent=products.filter(p=>suggestOrder(p).order>0).length;
+ const pri=[...xs].sort((a,b)=>(a.d-b.d)||(b.value-a.value)).slice(0,6); document.getElementById('priorityBody').innerHTML=pri.map(x=>{const r=rec(x);return `<tr><td><div class="prod">${x.p.name}</div><div class="tiny">${x.batch}</div></td><td>${x.d}</td><td>${x.qty}</td><td>${x.risk.toFixed(1)} · ${money(x.value)}</td><td><span class="pill ${r[1]}">${r[0]}</span><div class="tiny" style="margin-top:4px">${r[2]}</div></td></tr>`}).join('');
+ const cats={};xs.forEach(x=>cats[x.p.cat]=(cats[x.p.cat]||0)+x.value);const max=Math.max(...Object.values(cats),1);document.getElementById('categoryBars').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>`<div class="barrow"><div class="barlabel">${k}</div><div class="track"><div class="fill" style="width:${100*v/max}%"></div></div><div class="barval">${money(v)}</div></div>`).join('')}
+function renderExpiry(){let q=(document.getElementById('q')?.value||'').toLowerCase();let xs=batches.map(calc).filter(x=>(x.p.name+' '+x.p.cat+' '+x.batch).toLowerCase().includes(q)).sort((a,b)=>(a.d-b.d)||(b.value-a.value));document.getElementById('expiryBody').innerHTML=xs.map(x=>{let r=rec(x);return `<tr><td class="prod">${x.p.name}<div class="tiny">${x.p.cat}</div></td><td>${x.batch}</td><td><span class="pill ${x.type==='Use-by'?'red':'blue'}">${x.type}</span></td><td>${x.expiry}</td><td>${x.d}</td><td>${x.qty}</td><td>${x.p.avg.toFixed(1)}</td><td>${x.risk.toFixed(1)}</td><td>${money(x.value)}</td><td class="${r[0]==='Hard stop'?'hard':'action'}">${r[2]}</td></tr>`}).join('')}
+function populateForm(){let sel=document.getElementById('fProduct');if(sel && !sel.children.length)sel.innerHTML=products.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');let e=document.getElementById('fExpiry');if(e&&!e.value)e.value='2026-09-07';let d=document.getElementById('fDelivery');if(d&&!d.value)d.value='2026-09-03'}
+function addBatch(){let b={product:fProduct.value,batch:fBatch.value,type:fType.value,expiry:fExpiry.value,qty:+fQty.value,cost:+fCost.value,supplier:fSupplier.value};batches.unshift(b);renderAll();showView('expiry')}
+function resetForm(){fBatch.value='B-NEW-001';fQty.value=12;fCost.value=1.10;fSupplier.value='Example Wholesaler'}
+function renderWaste(){document.getElementById('wasteBody').innerHTML=waste.map(w=>`<tr><td>${w.date}</td><td class="prod">${w.product}</td><td>${w.batch}</td><td>${w.reason}</td><td>${w.qty}</td><td>${money(w.value)}</td><td class="tiny">${w.note}</td></tr>`).join('')}
+function addWasteDemo(){waste.unshift({date:'2026-09-03',product:'Fresh Orange Juice 1L',batch:'J-0831',reason:'Expired',qty:2,value:3.10,note:'Synthetic example'});renderAll()}
+function nearQty(p){return batches.filter(b=>b.product===p.id&&days(b.expiry)<=2).reduce((s,b)=>s+b.qty,0)}
+function suggestOrder(p){const near=nearQty(p);const usable=Math.max(0,p.stock-near);const target=p.avg*p.lead+p.safety;return {near,usable,order:Math.max(0,Math.ceil(target-usable))}}
+function renderReorder(){document.getElementById('reorderBody').innerHTML=products.map(p=>{let s=suggestOrder(p);return `<tr><td class="prod">${p.name}</td><td>${p.stock}</td><td>${s.near}</td><td>${s.usable}</td><td>${p.avg.toFixed(1)}</td><td>${p.lead}d</td><td>${p.safety}</td><td><span class="pill ${s.order?'amber':'green'}">${s.order}</span></td><td class="tiny">${s.order?'Near-expiry/usable stock below lead-time target':'Current usable stock covers target'}</td></tr>`}).join('')}
+function renderReports(){const reasons={};waste.forEach(w=>reasons[w.reason]=(reasons[w.reason]||0)+w.value);const max=Math.max(...Object.values(reasons),1);document.getElementById('wasteBars').innerHTML=Object.entries(reasons).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="barrow"><div class="barlabel">${k}</div><div class="track"><div class="fill" style="width:${100*v/max}%"></div></div><div class="barval">${money(v)}</div></div>`).join('')}
+function downloadCSV(){let rows=[['Product','Batch','Date type','Expiry','Days','Stock','At risk qty','At risk value','Recommendation'],...batches.map(calc).map(x=>[x.p.name,x.batch,x.type,x.expiry,x.d,x.qty,x.risk.toFixed(1),x.value.toFixed(2),rec(x)[2]])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='ExpiryIQ_expiry_queue.csv';a.click()}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===id));document.getElementById('title').textContent=({dashboard:'Dashboard',expiry:'Expiry action queue',batch:'Batch capture',waste:'Waste log',reorder:'Reorder support',reports:'Reports',evidence:'Evidence & rules'})[id]||'ExpiryIQ';location.hash=id;}
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.view)}));renderAll();showView(location.hash.slice(1)||new URLSearchParams(location.search).get('view')||'dashboard');
+</script>
+</body>
+</html>
