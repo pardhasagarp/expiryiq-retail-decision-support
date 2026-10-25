@@ -1,0 +1,16 @@
+# Operating-system / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary / generated files
+*.tmp
+*.temp
+~$*
+*.log
+
+# Local archives and renders
+*.zip
+renders/
+qa/
